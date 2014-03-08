@@ -1,0 +1,10 @@
+CREATE VIEW cardinals AS SELECT pid, fname, lname FROM lab5.player AS pl INNER JOIN lab5.baseball_team AS bt ON (pl.tid = 1 AND pl.pid = bt.tid);
+CREATE VIEW cardinals_statistics AS SELECT fname, lname, round((cast(hits AS float)/cast(ab AS float))::numeric, 2) AS avg FROM cardinals AS cd INNER JOIN lab5.statistics AS st ON (cd.pid = st.pid);
+SELECT league, city, name FROM lab5.baseball_team AS bt WHERE NOT EXISTS ( SELECT bt.tid FROM player  WHERE (bt.tid = player.tid));
+SELECT fname, lname FROM lab5.player AS p WHERE tid IN (SELECT tid FROM lab5.baseball_team AS bt WHERE league = 'NL');
+SELECT pos FROM position WHERE pos NOT IN (SELECT pos FROM played_by as pb, statistics AS st WHERE pb.pid = st.pid);
+SELECT pid FROM played_by WHERE pos = '1B' UNION SELECT pid FROM played_by WHERE pos = 'RF';
+SELECT fname, lname FROM player AS p, played_by AS pb WHERE (pos = '1B' AND p.pid = pb.pid) INTERSECT SELECT fname, lname FROM player AS p, played_by AS pb WHERE pos ='C' AND p.pid = pb.pid;
+SELECT fname, lname, league, city, name FROM player AS p, baseball_team AS bt WHERE p.tid = bt.tid ORDER BY league DESC, city ASC, lname ASC;
+WITH royals AS (SELECT pid, fname, lname FROM player as p, baseball_team AS bt WHERE name = 'Royals' AND p.tid = bt.tid) SELECT * FROM statistics AS st, royals WHERE st.pid = royals.pid;
+WITH non_cards AS(SELECT DISTINCT p.pid, fname, lname FROM player as p, baseball_team AS bt, statistics AS st, played_by AS pb WHERE name != 'Cardinals' AND p.tid = bt.tid AND p.pid = st.pid AND hits > 165 AND pos = 'LF') update player SET tid = (SELECT tid FROM baseball_team WHERE name = 'Cardinals') FROM non_cards WHERE non_cards.pid = player.pid;

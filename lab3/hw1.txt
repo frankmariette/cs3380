@@ -1,0 +1,23 @@
+1. b. collapse: collapse;
+
+2. No, it will grab all the th tags within #myTable but will then grab all the td tags in the entire document. A way to fix this would be to write "table#myTable th, table#myTable td" for the selector.
+
+3. Adjusts the verical shadow position.
+
+4. Yes as negative values are allowed in the text-shadow property. 
+
+5. False
+
+6. border-bottom-left-radius: 0px;
+   border-bottom-right-radius: 0px;
+
+7. True
+
+8. change div#theDiv{
+				height: 200px;
+				width: 200px;
+				background-color:orange;
+				transition: background-color 4s ease,
+							height 4s ease;
+
+			}
